@@ -93,5 +93,8 @@ if ($isDirectExecution) {
             $value = Get-Factorial -N $N
             Write-Output "Factorial($N) = $value"
         }
+        default {
+            throw "Unsupported operation '$Operation'."
+        }
     }
 }
