@@ -16,7 +16,6 @@ param(
     [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
     [long]$N,
 
-    [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci'
 )
 
@@ -94,6 +93,9 @@ if ($isDirectExecution) {
         'factorial' {
             $value = Get-Factorial -N $N
             Write-Output "Factorial($N) = $value"
+        }
+        default {
+            throw "Unsupported operation '$Operation'."
         }
     }
 }
