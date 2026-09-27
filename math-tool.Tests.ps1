@@ -72,9 +72,15 @@ Describe 'math-tool CLI' {
 
         $result = Invoke-MathToolProcess -N $N
         $result.ExitCode | Should -Be 0
-        $expectedOutput = [regex]::Escape("Fibonacci($N) = $Expected")
-        $result.Stdout | Should -Match "^$expectedOutput\r?\n$"
+        $result.Stdout | Should -Be "Fibonacci($N) = $Expected$([Environment]::NewLine)"
         $result.Stderr | Should -Be ''
+    }
+
+    It 'fails with a clear error when N is negative' {
+        $result = Invoke-MathToolProcess -N -1
+        $result.ExitCode | Should -Not -Be 0
+        $result.Stdout | Should -Be ''
+        $result.Stderr | Should -Match 'N must be a non-negative integer.'
     }
 
     It 'fails with a clear error when N is omitted' {
