@@ -1,13 +1,12 @@
 BeforeAll {
     $implementationPath = Join-Path $PSScriptRoot 'math-tool.ps1'
-    . $implementationPath -N 0
+    . $implementationPath
 
     function Invoke-MathToolProcess {
         param([int]$N)
 
         $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
-        $startInfo.FileName = Get-Command pwsh -CommandType Application |
-            Select-Object -First 1 -ExpandProperty Source
+        $startInfo.FileName = (Get-Process -Id $PID).Path
         $startInfo.UseShellExecute = $false
         $startInfo.RedirectStandardOutput = $true
         $startInfo.RedirectStandardError = $true
@@ -61,7 +60,6 @@ Describe 'math-tool CLI' {
         $result = Invoke-MathToolProcess -N $N
         $result.ExitCode | Should -Be 0
         $result.Stdout | Should -Be "Fibonacci($N) = $Expected$([Environment]::NewLine)"
-        [regex]::Matches($result.Stdout, '\r\n|\n|\r').Count | Should -Be 1
         $result.Stderr | Should -Be ''
     }
 }

@@ -1,6 +1,5 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory = $true)]
     [ValidateRange(0, [int]::MaxValue)]
     [int]$N
 )
@@ -24,7 +23,7 @@ function Get-Fibonacci {
     return $previous
 }
 
-if ($MyInvocation.InvocationName -ne '.') {
+if ($PSBoundParameters.ContainsKey('N')) {
     $value = Get-Fibonacci -N $N
     Write-Output "Fibonacci($N) = $value"
 }
