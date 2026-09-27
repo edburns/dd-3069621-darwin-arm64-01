@@ -42,6 +42,7 @@ Describe 'Get-Fibonacci' {
         @{ N = 0; Expected = 0 }
         @{ N = 1; Expected = 1 }
         @{ N = 10; Expected = 55 }
+        @{ N = 100; Expected = '354224848179261915075' }
     ) {
         param($N, $Expected)
 
