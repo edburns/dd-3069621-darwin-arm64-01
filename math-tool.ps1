@@ -3,15 +3,15 @@
 Writes a Fibonacci value to standard output.
 
 .PARAMETER N
-Non-negative integer index of the Fibonacci value to calculate.
+Required for direct execution; non-negative integer index of the Fibonacci value to calculate.
 
 .DESCRIPTION
 Direct execution writes one line in the format Fibonacci(N) = value.
 #>
 [CmdletBinding()]
 param(
-    [ValidateRange(0, [int]::MaxValue)]
-    [int]$N
+    [ValidateScript({ $_ -ge 0 })]
+    [System.Numerics.BigInteger]$N
 )
 
 function Get-Fibonacci {
@@ -20,7 +20,7 @@ function Get-Fibonacci {
     Returns the Fibonacci number at index N.
 
     .PARAMETER N
-    Zero-based non-negative index.
+    Zero-based non-negative integer index.
 
     .OUTPUTS
     System.Numerics.BigInteger
@@ -28,23 +28,29 @@ function Get-Fibonacci {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateRange(0, [int]::MaxValue)]
-        [int]$N
+        [ValidateScript({ $_ -ge 0 })]
+        [System.Numerics.BigInteger]$N
     )
 
     $previous = [System.Numerics.BigInteger]::Zero
     $current = [System.Numerics.BigInteger]::One
-    for ($index = 0; $index -lt $N; $index++) {
+    $index = [System.Numerics.BigInteger]::Zero
+    while ($index -lt $N) {
         $next = $previous + $current
         $previous = $current
         $current = $next
+        $index = $index + [System.Numerics.BigInteger]::One
     }
 
     # After N iterations, $previous holds F(N).
     return $previous
 }
 
-if ($PSBoundParameters.ContainsKey('N')) {
+if ($MyInvocation.InvocationName -ne '.') {
+    if (-not $PSBoundParameters.ContainsKey('N')) {
+        throw 'The -N parameter is required when invoking this script directly.'
+    }
+
     $value = Get-Fibonacci -N $N
     Write-Output "Fibonacci($N) = $value"
 }
