@@ -3,7 +3,7 @@ BeforeAll {
     . $script:implementationPath
 
     function script:Invoke-MathToolProcess {
-        param([System.Numerics.BigInteger]$N)
+        param([long]$N)
 
         $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
         $startInfo.FileName = Get-Command pwsh -CommandType Application -ErrorAction Stop |
