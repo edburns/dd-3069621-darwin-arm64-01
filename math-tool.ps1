@@ -1,17 +1,23 @@
 <#
 .SYNOPSIS
-Writes a Fibonacci value to standard output.
+Writes a math operation result to standard output.
 
 .PARAMETER N
 Required for direct execution; non-negative 64-bit integer index of the Fibonacci value to calculate.
 
+.PARAMETER Operation
+Math operation to calculate. Defaults to fibonacci.
+
 .DESCRIPTION
-Direct execution writes one line in the format Fibonacci(N) = value.
+Direct execution writes one line in the format Fibonacci(N) = value or Factorial(N) = value.
 #>
 [CmdletBinding()]
 param(
     [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
-    [long]$N
+    [long]$N,
+
+    [ValidateSet('fibonacci', 'factorial')]
+    [string]$Operation = 'fibonacci'
 )
 
 $isDirectExecution = $MyInvocation.InvocationName -ne '.'
@@ -51,7 +57,41 @@ function Get-Fibonacci {
     return $previous
 }
 
+function Get-Factorial {
+    <#
+    .SYNOPSIS
+    Returns the factorial of N.
+
+    .PARAMETER N
+    Non-negative 64-bit integer.
+
+    .OUTPUTS
+    System.Numerics.BigInteger
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
+        [long]$N
+    )
+
+    $result = [System.Numerics.BigInteger]::One
+    for ([long]$factor = 2; $factor -le $N; $factor++) {
+        $result *= $factor
+    }
+
+    return $result
+}
+
 if ($isDirectExecution) {
-    $value = Get-Fibonacci -N $N
-    Write-Output "Fibonacci($N) = $value"
+    switch ($Operation) {
+        'fibonacci' {
+            $value = Get-Fibonacci -N $N
+            Write-Output "Fibonacci($N) = $value"
+        }
+        'factorial' {
+            $value = Get-Factorial -N $N
+            Write-Output "Factorial($N) = $value"
+        }
+    }
 }
