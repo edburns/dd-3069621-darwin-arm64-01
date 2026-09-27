@@ -1,3 +1,13 @@
+<#
+.SYNOPSIS
+Writes a Fibonacci value to standard output.
+
+.PARAMETER N
+Non-negative integer index of the Fibonacci value to calculate.
+
+.DESCRIPTION
+Direct execution writes one line in the format Fibonacci(N) = value.
+#>
 [CmdletBinding()]
 param(
     [ValidateRange(0, [int]::MaxValue)]
@@ -30,6 +40,7 @@ function Get-Fibonacci {
         $current = $next
     }
 
+    # After N iterations, $previous holds F(N).
     return $previous
 }
 
