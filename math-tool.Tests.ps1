@@ -1,6 +1,6 @@
 BeforeAll {
-    $implementationPath = Join-Path $PSScriptRoot 'math-tool.ps1'
-    . $implementationPath
+    $script:implementationPath = Join-Path $PSScriptRoot 'math-tool.ps1'
+    . $script:implementationPath
 
     function Invoke-MathToolProcess {
         param([int]$N)
@@ -10,7 +10,7 @@ BeforeAll {
         $startInfo.UseShellExecute = $false
         $startInfo.RedirectStandardOutput = $true
         $startInfo.RedirectStandardError = $true
-        foreach ($argument in @('-NoLogo', '-NoProfile', '-File', $implementationPath, '-N', "$N")) {
+        foreach ($argument in @('-NoLogo', '-NoProfile', '-File', $script:implementationPath, '-N', "$N")) {
             [void]$startInfo.ArgumentList.Add($argument)
         }
 
