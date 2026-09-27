@@ -11,7 +11,11 @@ BeforeAll {
         $startInfo.UseShellExecute = $false
         $startInfo.RedirectStandardOutput = $true
         $startInfo.RedirectStandardError = $true
-        foreach ($argument in @('-NoLogo', '-NoProfile', '-File', $script:implementationPath, '-N', "$N")) {
+        $arguments = @('-NoLogo', '-NoProfile', '-File', $script:implementationPath)
+        if ($PSBoundParameters.ContainsKey('N')) {
+            $arguments += @('-N', "$N")
+        }
+        foreach ($argument in $arguments) {
             [void]$startInfo.ArgumentList.Add($argument)
         }
 
@@ -51,6 +55,10 @@ Describe 'Get-Fibonacci' {
         $result[0] | Should -BeOfType [System.Numerics.BigInteger]
         $result[0] | Should -Be ([System.Numerics.BigInteger]$Expected)
     }
+
+    It 'rejects negative indices with a clear validation message' {
+        { Get-Fibonacci -N -1 } | Should -Throw '*N must be a non-negative integer.*'
+    }
 }
 
 Describe 'math-tool CLI' {
@@ -67,5 +75,12 @@ Describe 'math-tool CLI' {
         $expectedOutput = [regex]::Escape("Fibonacci($N) = $Expected")
         $result.Stdout | Should -Match "^$expectedOutput\r?\n$"
         $result.Stderr | Should -Be ''
+    }
+
+    It 'fails with a clear error when N is omitted' {
+        $result = Invoke-MathToolProcess
+        $result.ExitCode | Should -Not -Be 0
+        $result.Stdout | Should -Be ''
+        $result.Stderr | Should -Match 'The -N parameter is required when invoking this script directly.'
     }
 }

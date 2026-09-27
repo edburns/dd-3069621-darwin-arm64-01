@@ -14,6 +14,10 @@ param(
     [System.Numerics.BigInteger]$N
 )
 
+if ($MyInvocation.InvocationName -ne '.' -and -not $PSBoundParameters.ContainsKey('N')) {
+    throw 'The -N parameter is required when invoking this script directly.'
+}
+
 function Get-Fibonacci {
     <#
     .SYNOPSIS
@@ -47,10 +51,6 @@ function Get-Fibonacci {
 }
 
 if ($MyInvocation.InvocationName -ne '.') {
-    if (-not $PSBoundParameters.ContainsKey('N')) {
-        throw 'The -N parameter is required when invoking this script directly.'
-    }
-
     $value = Get-Fibonacci -N $N
     Write-Output "Fibonacci($N) = $value"
 }
