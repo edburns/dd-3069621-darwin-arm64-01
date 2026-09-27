@@ -63,7 +63,7 @@ function Get-Factorial {
     Returns the factorial of N.
 
     .PARAMETER N
-    Non-negative 64-bit integer.
+    Non-negative 64-bit integer. The accepted input is bounded by this parameter type; the result accumulates in BigInteger.
 
     .OUTPUTS
     System.Numerics.BigInteger
@@ -94,7 +94,7 @@ if ($isDirectExecution) {
             Write-Output "Factorial($N) = $value"
         }
         default {
-            # Keep switch updates explicit if supported operations change.
+            # ValidateSet makes this unreachable today; fail loudly if validation is broadened without updating dispatch.
             throw "Unsupported operation '$Operation'."
         }
     }
