@@ -2,8 +2,8 @@ BeforeAll {
     $script:implementationPath = Join-Path $PSScriptRoot 'math-tool.ps1'
     . $script:implementationPath
 
-    function Invoke-MathToolProcess {
-        param([int]$N)
+    function script:Invoke-MathToolProcess {
+        param([System.Numerics.BigInteger]$N)
 
         $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
         $startInfo.FileName = Get-Command pwsh -CommandType Application -ErrorAction Stop |
@@ -58,6 +58,7 @@ Describe 'math-tool CLI' {
         @{ N = 0; Expected = 0 }
         @{ N = 1; Expected = 1 }
         @{ N = 10; Expected = 55 }
+        @{ N = 100; Expected = '354224848179261915075' }
     ) {
         param($N, $Expected)
 

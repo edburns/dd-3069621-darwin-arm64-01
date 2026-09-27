@@ -10,7 +10,7 @@ Direct execution writes one line in the format Fibonacci(N) = value.
 #>
 [CmdletBinding()]
 param(
-    [ValidateScript({ $_ -ge 0 })]
+    [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
     [System.Numerics.BigInteger]$N
 )
 
@@ -28,7 +28,7 @@ function Get-Fibonacci {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ $_ -ge 0 })]
+        [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
         [System.Numerics.BigInteger]$N
     )
 
