@@ -3,7 +3,7 @@
 Writes a math operation result to standard output.
 
 .PARAMETER N
-Required for direct execution; non-negative 64-bit integer index of the Fibonacci value to calculate.
+Required for direct execution; non-negative 64-bit integer operand for the selected operation.
 
 .PARAMETER Operation
 Math operation to calculate. Defaults to fibonacci.
