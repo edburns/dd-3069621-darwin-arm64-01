@@ -16,6 +16,7 @@ param(
     [ValidateScript({ $_ -ge 0 }, ErrorMessage = 'N must be a non-negative integer.')]
     [long]$N,
 
+    [ValidateSet('fibonacci', 'factorial')]
     [string]$Operation = 'fibonacci'
 )
 
@@ -75,8 +76,9 @@ function Get-Factorial {
     )
 
     $result = [System.Numerics.BigInteger]::One
+    $limit = [System.Numerics.BigInteger]$N
     $factor = [System.Numerics.BigInteger]2
-    while ($factor -le $N) {
+    while ($factor -le $limit) {
         $result *= $factor
         $factor += [System.Numerics.BigInteger]::One
     }
