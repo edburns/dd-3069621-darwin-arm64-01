@@ -76,8 +76,10 @@ function Get-Factorial {
     )
 
     $result = [System.Numerics.BigInteger]::One
-    for ([long]$factor = 2; $factor -le $N; $factor++) {
+    $factor = [System.Numerics.BigInteger]2
+    while ($factor -le $N) {
         $result *= $factor
+        $factor += [System.Numerics.BigInteger]::One
     }
 
     return $result
@@ -92,10 +94,6 @@ if ($isDirectExecution) {
         'factorial' {
             $value = Get-Factorial -N $N
             Write-Output "Factorial($N) = $value"
-        }
-        default {
-            # ValidateSet makes this unreachable today; fail loudly if validation is broadened without updating dispatch.
-            throw "Unsupported operation '$Operation'."
         }
     }
 }
