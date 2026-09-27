@@ -94,6 +94,7 @@ if ($isDirectExecution) {
             Write-Output "Factorial($N) = $value"
         }
         default {
+            # Keep switch updates explicit if supported operations change.
             throw "Unsupported operation '$Operation'."
         }
     }
