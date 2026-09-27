@@ -97,6 +97,7 @@ if ($isDirectExecution) {
             Write-Output "Factorial($N) = $value"
         }
         default {
+            # Unreachable with the current ValidateSet; retained so future Operation additions fail loudly until dispatched.
             throw "Unsupported operation '$Operation'."
         }
     }
