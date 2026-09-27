@@ -6,7 +6,8 @@ BeforeAll {
         param([int]$N)
 
         $startInfo = [System.Diagnostics.ProcessStartInfo]::new()
-        $startInfo.FileName = (Get-Process -Id $PID).Path
+        $startInfo.FileName = Get-Command pwsh -CommandType Application -ErrorAction Stop |
+            Select-Object -First 1 -ExpandProperty Source
         $startInfo.UseShellExecute = $false
         $startInfo.RedirectStandardOutput = $true
         $startInfo.RedirectStandardError = $true
@@ -20,12 +21,14 @@ BeforeAll {
             [void]$process.Start()
             $stdoutTask = $process.StandardOutput.ReadToEndAsync()
             $stderrTask = $process.StandardError.ReadToEndAsync()
+            $stdout = $stdoutTask.GetAwaiter().GetResult()
+            $stderr = $stderrTask.GetAwaiter().GetResult()
             $process.WaitForExit()
 
             [pscustomobject]@{
                 ExitCode = $process.ExitCode
-                Stdout   = $stdoutTask.GetAwaiter().GetResult()
-                Stderr   = $stderrTask.GetAwaiter().GetResult()
+                Stdout   = $stdout
+                Stderr   = $stderr
             }
         }
         finally {
@@ -59,7 +62,8 @@ Describe 'math-tool CLI' {
 
         $result = Invoke-MathToolProcess -N $N
         $result.ExitCode | Should -Be 0
-        $result.Stdout | Should -Be "Fibonacci($N) = $Expected$([Environment]::NewLine)"
+        $expectedOutput = [regex]::Escape("Fibonacci($N) = $Expected")
+        $result.Stdout | Should -Match "^$expectedOutput\r?\n$"
         $result.Stderr | Should -Be ''
     }
 }

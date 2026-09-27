@@ -5,6 +5,16 @@ param(
 )
 
 function Get-Fibonacci {
+    <#
+    .SYNOPSIS
+    Returns the Fibonacci number at index N.
+
+    .PARAMETER N
+    Zero-based non-negative index.
+
+    .OUTPUTS
+    System.Numerics.BigInteger
+    #>
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
